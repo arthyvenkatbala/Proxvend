@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Proxvend — Smart Vending for Gyms & Sports Venues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange:       #FF5E00;
+    --orange-light: #FF7A2B;
+    --orange-pale:  #FFF0E8;
+    --orange-dim:   rgba(255,94,0,0.12);
+    --black:        #0A0A0A;
+    --ink-dark:     #111111;
+    --ink:          #1A1A1A;
+    --gray:         #6B6B6B;
+    --gray-light:   #9A9A9A;
+    --border:       #2A2A2A;
+    --border-light: #E8E8E8;
+    --light:        #F5F5F5;
+    --white:        #FFFFFF;
+    --display: 'Barlow Condensed', sans-serif;
+    --body:    'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body); background: var(--white); color: var(--ink); overflow-x: hidden; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 5vw; height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 32px rgba(0,0,0,.6); }
+
+  .nav-logo {
+    font-family: var(--display); font-size: 1.6rem; font-weight: 900;
+    letter-spacing: .03em; color: var(--white); text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); }
+
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a {
+    font-size: .875rem; font-weight: 500; color: rgba(255,255,255,.5);
+    text-decoration: none; letter-spacing: .01em; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--orange) !important; color: var(--white) !important;
+    padding: 9px 22px; border-radius: 6px;
+    font-weight: 700 !important; transition: background .2s, transform .15s !important;
+    box-shadow: 0 0 20px rgba(255,94,0,0.3);
+  }
+  .nav-cta:hover { background: var(--orange-light) !important; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh; padding: 140px 5vw 80px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 60px;
+    position: relative; overflow: hidden;
+    background: var(--black);
+  }
+
+  /* grid texture */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,94,0,.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,94,0,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+  }
+
+  .hero-bg-blob {
+    position: absolute; right: -60px; top: 80px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,94,0,.15) 0%, transparent 65%);
+    border-radius: 50%; z-index: 0;
+    animation: blob 9s ease-in-out infinite;
+  }
+  @keyframes blob { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.04)} }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,94,0,.1);
+    border: 1px solid rgba(255,94,0,.3);
+    border-radius: 40px; padding: 6px 16px;
+    font-size: .75rem; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 24px;
+    opacity: 0; animation: fadeUp .7s .1s ease forwards;
+  }
+  .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-size: clamp(3.2rem, 6.5vw, 5.8rem);
+    font-weight: 900; line-height: .95;
+    letter-spacing: -.01em; color: var(--white);
+    margin-bottom: 26px;
+    opacity: 0; animation: fadeUp .7s .25s ease forwards;
+  }
+  .hero-headline .accent { color: var(--orange); display: block; }
+
+  .hero-sub {
+    font-size: 1.05rem; line-height: 1.7;
+    color: rgba(255,255,255,.55); max-width: 480px;
+    margin-bottom: 20px;
+    opacity: 0; animation: fadeUp .7s .38s ease forwards;
+  }
+  .hero-sub strong { color: var(--white); font-weight: 600; }
+
+  .venue-pills {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;
+    opacity: 0; animation: fadeUp .7s .48s ease forwards;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12);
+    border-radius: 30px; padding: 6px 14px;
+    font-size: .8rem; font-weight: 600; color: rgba(255,255,255,.8);
+  }
+  .pill:hover { border-color: var(--orange); color: var(--orange); }
+  .pill-icon { font-size: 1rem; }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp .7s .56s ease forwards;
+  }
+  .btn-primary {
+    background: var(--orange); color: white; border: none;
+    padding: 14px 30px; border-radius: 8px;
+    font-family: var(--body); font-size: .95rem; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 24px rgba(255,94,0,.35);
+  }
+  .btn-primary:hover { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,94,0,.5); }
+  .btn-ghost {
+    background: transparent; color: rgba(255,255,255,.8);
+    border: 1.5px solid rgba(255,255,255,.2);
+    padding: 13px 26px; border-radius: 8px;
+    font-family: var(--body); font-size: .95rem; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: border-color .2s, color .2s, transform .15s;
+  }
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+
+  /* hero card */
+  .hero-visual {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center;
+    opacity: 0; animation: fadeIn .9s .65s ease forwards;
+  }
+  .station-card {
+    background: var(--ink-dark);
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 32px; width: 340px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.6), 0 0 0 1px rgba(255,94,0,.08);
+    position: relative;
+  }
+  .station-card::before {
+    content: ''; position: absolute; top: -2px; left: 36px; right: 36px; height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    border-radius: 0 0 4px 4px;
+  }
+  .station-icon {
+    width: 68px; height: 68px; background: rgba(255,94,0,.1);
+    border: 1px solid rgba(255,94,0,.2);
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin-bottom: 20px;
+  }
+  .station-card h3 {
+    font-family: var(--display); font-size: 1.45rem; font-weight: 800;
+    color: var(--white); margin-bottom: 6px; letter-spacing: .02em;
+  }
+  .station-card p { font-size: .875rem; color: rgba(255,255,255,.45); line-height: 1.6; margin-bottom: 20px; }
+  .station-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 20px; }
+  .s-tag { background: rgba(255,255,255,.07); color: rgba(255,255,255,.7); padding: 5px 11px; border-radius: 20px; font-size: .75rem; font-weight: 500; border: 1px solid rgba(255,255,255,.1); }
+  .s-tag.o { background: rgba(255,94,0,.12); color: var(--orange); border-color: rgba(255,94,0,.2); }
+  .station-venues {
+    background: rgba(255,94,0,.08); border: 1px solid rgba(255,94,0,.15);
+    border-radius: 10px; padding: 12px 16px;
+    display: flex; justify-content: space-around;
+  }
+  .venue-stat { text-align: center; }
+  .venue-stat span { font-family: var(--display); font-size: 1.5rem; font-weight: 900; color: var(--orange); display: block; line-height: 1; }
+  .venue-stat small { font-size: .7rem; color: rgba(255,255,255,.4); }
+
+  .float-badge {
+    position: absolute; background: var(--ink-dark);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 9px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.8);
+    display: flex; align-items: center; gap: 7px; white-space: nowrap;
+  }
+  .badge-1 { top: -14px; right: -20px; animation: floatB 5s ease-in-out infinite; }
+  .badge-2 { bottom: 20px; left: -28px; animation: floatB 5s ease-in-out 2s infinite; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; }
+  @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0;transform:scale(.97)} to{opacity:1;transform:scale(1)} }
+
+  /* ── SHARED ── */
+  section { padding: 96px 5vw; }
+  .sec-label { font-size: .73rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+  .sec-title { font-family: var(--display); font-size: clamp(2.1rem, 4.2vw, 3.2rem); font-weight: 800; line-height: 1.05; color: var(--ink); letter-spacing: -.01em; }
+  .sec-sub { font-size: 1rem; line-height: 1.7; color: var(--gray); max-width: 540px; margin-top: 14px; }
+
+  /* ── STATS ── */
+  #stats { background: var(--ink); padding: 52px 5vw; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat-cell { padding: 28px 32px; position: relative; border-right: 1px solid rgba(255,255,255,.07); }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num { font-family: var(--display); font-size: 2.8rem; font-weight: 900; color: var(--orange); line-height: 1; display: block; margin-bottom: 6px; }
+  .stat-desc { font-size: .84rem; color: rgba(255,255,255,.45); line-height: 1.4; }
+
+  /* ── VENUES ── */
+  #venues { background: var(--white); }
+  .venues-header { margin-bottom: 60px; }
+  .venues-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .venue-card {
+    border: 1px solid var(--border-light); border-radius: 18px; overflow: hidden;
+    transition: box-shadow .25s, transform .25s, border-color .25s;
+  }
+  .venue-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,.09); transform: translateY(-4px); border-color: rgba(255,94,0,.3); }
+  .venue-card-top { padding: 36px 32px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .venue-emoji-wrap { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; }
+  .vc-gym { background: var(--orange-pale); }
+  .vc-turf { background: #F0FFF4; }
+  .vc-multi { background: #EFF6FF; }
+  .venue-card h3 { font-family: var(--display); font-size: 1.5rem; font-weight: 800; color: var(--ink); letter-spacing: .01em; }
+  .venue-card p { font-size: .875rem; color: var(--gray); line-height: 1.6; }
+  .venue-card-profiles { background: var(--light); border-top: 1px solid var(--border-light); padding: 18px 32px; }
+  .profiles-label { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; }
+  .profiles-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .profile-chip { background: var(--white); border: 1px solid var(--border-light); border-radius: 20px; padding: 4px 11px; font-size: .75rem; font-weight: 500; color: var(--ink); }
+
+  /* ── PROBLEM ── */
+  #problem { background: var(--ink); }
+  #problem .sec-title { color: var(--white); }
+  #problem .sec-sub { color: rgba(255,255,255,.5); }
+  .problem-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center; }
+  .problem-stack { display: flex; flex-direction: column; gap: 14px; }
+  .problem-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px; padding: 22px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: background .25s, border-color .25s, transform .25s;
+  }
+  .problem-card:hover { background: rgba(255,94,0,.07); border-color: rgba(255,94,0,.2); transform: translateX(5px); }
+  .prob-icon { width: 42px; height: 42px; min-width: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+  .pi-r { background: rgba(255,80,80,.15); }
+  .pi-a { background: rgba(255,200,0,.1); }
+  .pi-b { background: rgba(80,160,255,.1); }
+  .pi-g { background: rgba(255,94,0,.1); }
+  .problem-card h4 { font-size: .93rem; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+  .problem-card p { font-size: .83rem; color: rgba(255,255,255,.45); line-height: 1.55; }
+
+  /* ── HOW ── */
+  #how { background: var(--light); }
+  .how-header { margin-bottom: 60px; }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border-light); border-radius: 16px; overflow: hidden; }
+  .step { background: var(--white); padding: 44px 34px; position: relative; transition: background .3s; }
+  .step:hover { background: var(--orange-pale); }
+  .step-num { font-family: var(--display); font-size: 4.5rem; font-weight: 900; color: var(--orange); opacity: .1; line-height: 1; margin-bottom: -14px; display: block; transition: opacity .3s; }
+  .step:hover .step-num { opacity: .2; }
+  .step-icon { font-size: 1.8rem; margin-bottom: 18px; }
+  .step h3 { font-family: var(--display); font-size: 1.3rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; letter-spacing: .01em; }
+  .step p { font-size: .87rem; color: var(--gray); line-height: 1.65; }
+  .step-arr { position: absolute; right: -13px; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; background: var(--white); border: 1px solid var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; font-size: .68rem; color: var(--orange); }
+
+  /* ── BENEFITS ── */
+  #benefits { background: var(--black); }
+  .benefits-header { margin-bottom: 60px; }
+  .benefits-header .sec-label { color: var(--orange); }
+  .benefits-header .sec-title { color: var(--white); }
+  .benefits-header .sec-sub { color: rgba(255,255,255,.45); }
+  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .benefit-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 16px; padding: 30px; transition: background .3s, border-color .3s, transform .3s; }
+  .benefit-card:hover { background: rgba(255,94,0,.07); border-color: rgba(255,94,0,.25); transform: translateY(-4px); }
+  .benefit-num { font-family: var(--display); font-size: .78rem; font-weight: 700; letter-spacing: .1em; color: var(--orange); margin-bottom: 18px; display: block; }
+  .benefit-card h3 { font-family: var(--display); font-size: 1.35rem; font-weight: 800; color: var(--white); margin-bottom: 9px; letter-spacing: .01em; }
+  .benefit-card p { font-size: .87rem; color: rgba(255,255,255,.45); line-height: 1.65; }
+  .benefit-card.feat { background: var(--orange) !important; border-color: var(--orange) !important; box-shadow: 0 8px 32px rgba(255,94,0,.3); }
+  .benefit-card.feat:hover { background: var(--orange-light) !important; }
+  .benefit-card.feat .benefit-num { color: rgba(255,255,255,.7); }
+  .benefit-card.feat p { color: rgba(255,255,255,.85); }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--white); }
+  .products-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 72px; align-items: start; }
+  .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .product-card { background: var(--white); border: 1px solid var(--border-light); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .25s, transform .25s, border-color .25s; }
+  .product-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.08); transform: translateY(-4px); border-color: rgba(255,94,0,.3); }
+  .prod-emoji { font-size: 1.75rem; }
+  .prod-venue { font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--orange); background: var(--orange-pale); padding: 3px 9px; border-radius: 20px; display: inline-block; width: fit-content; }
+  .prod-venue.g { background: #EDFFF2; color: #1A7A3A; }
+  .product-card h4 { font-size: .92rem; font-weight: 600; color: var(--ink); }
+  .product-card p { font-size: .8rem; color: var(--gray); line-height: 1.55; flex: 1; }
+
+  /* ── WHY ── */
+  #why { background: var(--light); }
+  .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--border-light); border-radius: 16px; overflow: hidden; margin-top: 52px; }
+  .why-item { background: var(--white); padding: 34px 26px; transition: background .25s; }
+  .why-item:hover { background: var(--orange-pale); }
+  .why-check { width: 36px; height: 36px; border-radius: 50%; background: var(--orange-pale); display: flex; align-items: center; justify-content: center; color: var(--orange); font-size: .95rem; margin-bottom: 18px; }
+  .why-item h4 { font-family: var(--display); font-size: 1.12rem; font-weight: 800; color: var(--ink); margin-bottom: 7px; letter-spacing: .01em; }
+  .why-item p { font-size: .84rem; color: var(--gray); line-height: 1.6; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--ink); }
+  #testimonials .sec-title { color: var(--white); }
+  #testimonials .sec-sub { color: rgba(255,255,255,.5); }
+  .testimonials-header { text-align: center; margin-bottom: 56px; }
+  .testimonials-header .sec-sub { margin: 14px auto 0; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 18px; padding: 28px; transition: background .25s, border-color .25s, transform .25s; }
+  .testi-card:hover { background: rgba(255,94,0,.06); border-color: rgba(255,94,0,.2); transform: translateY(-3px); }
+  .testi-quote { font-size: 2.5rem; color: var(--orange); opacity: .5; font-family: Georgia, serif; line-height: .6; margin-bottom: 18px; display: block; }
+  .testi-text { font-size: .9rem; color: rgba(255,255,255,.7); line-height: 1.65; margin-bottom: 22px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 900; font-size: .9rem; color: white; }
+  .av-gym { background: var(--orange); }
+  .av-turf { background: #2A6E3A; }
+  .av-multi { background: #2A4A7A; }
+  .testi-name { font-size: .87rem; font-weight: 600; color: var(--white); display: block; }
+  .testi-role { font-size: .77rem; color: rgba(255,255,255,.4); }
+  .testi-venue-tag { font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 3px; }
+  .vt-gym { background: rgba(255,94,0,.15); color: var(--orange); }
+  .vt-turf { background: rgba(40,160,80,.12); color: #3EA855; }
+  .vt-multi { background: rgba(60,120,220,.12); color: #5B8CE0; }
+
+  /* ── CTA ── */
+  #contact { background: var(--orange); padding: 88px 5vw; text-align: center; position: relative; overflow: hidden; }
+  #contact::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,0,0,.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .cta-inner { position: relative; z-index: 1; }
+  .cta-eyebrow { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 22px; }
+  .cta-eyebrow .partner-with { font-family: var(--display); font-size: 1.2rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--black); line-height: 1.5; }
+  .cta-eyebrow .brand-name { font-family: var(--display); font-size: clamp(3rem, 6vw, 4.8rem); font-weight: 900; letter-spacing: .03em; text-transform: uppercase; color: var(--black); line-height: 1; }
+  .cta-eyebrow .brand-name .x-mark { color: var(--white); }
+  .cta-title { font-family: var(--display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; color: white; letter-spacing: -.01em; margin-bottom: 16px; line-height: 1.05; }
+  .cta-sub { font-size: 1rem; color: var(--black); margin-bottom: 44px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+  .cta-venue-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+  .cta-pill { background: rgba(0,0,0,.15); border: 1px solid rgba(255,255,255,.25); color: white; border-radius: 30px; padding: 6px 16px; font-size: .8rem; font-weight: 600; }
+  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn-primary { background: var(--black); color: white; padding: 14px 32px; border-radius: 8px; font-family: var(--body); font-size: .95rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.3); transition: background .2s, transform .2s; }
+  .cta-btn-primary:hover { background: #1a1a1a; transform: translateY(-2px); }
+  .cta-btn-outline { background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.4); color: white; padding: 13px 28px; border-radius: 8px; font-family: var(--body); font-size: .95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background .2s, transform .2s; }
+  .cta-btn-outline:hover { background: rgba(255,255,255,.25); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--black); padding: 72px 5vw 40px; border-top: 1px solid var(--border); }
+  .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 36px; }
+  .footer-logo { font-family: var(--display); font-size: 1.8rem; font-weight: 900; color: white; }
+  .footer-logo span { color: var(--orange); }
+  .footer-brand p { font-size: .875rem; color: rgba(255,255,255,.35); line-height: 1.7; margin-top: 14px; max-width: 260px; }
+  .footer-col h4 { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 18px; }
+  .footer-col a { display: block; font-size: .875rem; color: rgba(255,255,255,.45); text-decoration: none; margin-bottom: 11px; transition: color .2s; }
+  .footer-col a:hover { color: var(--orange); }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; }
+  .footer-copy { font-size: .78rem; color: rgba(255,255,255,.2); }
+  .footer-tagline { font-family: var(--display); font-size: .82rem; font-weight: 700; letter-spacing: .09em; color: var(--orange); opacity: .55; }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s}
+
+  /* ── ENQUIRY MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; animation: modalFadeIn .25s ease; }
+  @keyframes modalFadeIn { from{opacity:0} to{opacity:1} }
+
+  .modal {
+    background: var(--white); border-radius: 20px;
+    width: 100%; max-width: 520px; max-height: 92vh;
+    overflow-y: auto; position: relative;
+    box-shadow: 0 32px 80px rgba(0,0,0,.5);
+    animation: modalSlideUp .3s ease;
+  }
+  @keyframes modalSlideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  .modal-header {
+    padding: 28px 28px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 1px solid var(--border-light); padding-bottom: 20px;
+  }
+  .modal-header-text {}
+  .modal-header h3 {
+    font-family: var(--display); font-size: 1.7rem; font-weight: 900;
+    color: var(--ink); letter-spacing: .01em; line-height: 1;
+  }
+  .modal-header h3 span { color: var(--orange); }
+  .modal-header p { font-size: .82rem; color: var(--gray); margin-top: 5px; }
+  .modal-close {
+    background: var(--light); border: none; cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; color: var(--gray); flex-shrink: 0;
+    transition: background .2s, color .2s; margin-left: 16px;
+  }
+  .modal-close:hover { background: var(--orange); color: white; }
+
+  .modal-body { padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 16px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: .75rem; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--gray);
+  }
+  .form-group label .req { color: var(--orange); margin-left: 2px; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border-light); border-radius: 8px;
+    font-family: var(--body); font-size: .9rem; color: var(--ink);
+    background: var(--white); outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255,94,0,.1);
+  }
+  .form-group input.error,
+  .form-group select.error,
+  .form-group textarea.error {
+    border-color: #E53E3E;
+    box-shadow: 0 0 0 3px rgba(229,62,62,.1);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾'; position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%); pointer-events: none;
+    color: var(--gray); font-size: .85rem;
+  }
+  .form-group select { padding-right: 36px; cursor: pointer; }
+  .error-msg { font-size: .73rem; color: #E53E3E; display: none; }
+  .error-msg.show { display: block; }
+
+  #venue-row { display: none; }
+  #venue-row.show { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-submit {
+    background: var(--orange); color: white; border: none;
+    padding: 14px 24px; border-radius: 8px;
+    font-family: var(--body); font-size: .95rem; font-weight: 700;
+    cursor: pointer; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(255,94,0,.3); margin-top: 4px;
+  }
+  .form-submit:hover { background: var(--orange-light); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,94,0,.4); }
+
+  .form-note {
+    font-size: .75rem; color: var(--gray); text-align: center;
+    line-height: 1.5; margin-top: -4px;
+  }
+
+  .modal-success {
+    display: none; padding: 48px 28px; text-align: center;
+  }
+  .modal-success .success-icon {
+    width: 64px; height: 64px; background: #F0FFF4; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin: 0 auto 20px;
+  }
+  .modal-success h3 { font-family: var(--display); font-size: 1.8rem; font-weight: 900; color: var(--ink); margin-bottom: 10px; }
+  .modal-success p { font-size: .9rem; color: var(--gray); line-height: 1.6; max-width: 340px; margin: 0 auto 24px; }
+  .modal-success .close-success {
+    background: var(--orange); color: white; border: none;
+    padding: 12px 28px; border-radius: 8px;
+    font-family: var(--body); font-size: .9rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .modal-success .close-success:hover { background: var(--orange-light); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:960px) {
+    #hero { grid-template-columns: 1fr; padding-top: 110px; }
+    .hero-visual { display: none; }
+    .venues-grid,.testi-grid { grid-template-columns: 1fr; }
+    .problem-layout { grid-template-columns: 1fr; gap: 40px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .step-arr { display: none; }
+    .benefits-grid { grid-template-columns: 1fr 1fr; }
+    .products-layout { grid-template-columns: 1fr; gap: 40px; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">PRO<span>×</span>VEND</a>
+  <div class="nav-links">
+    <a href="#venues">Who We Serve</a>
+    <a href="#problem">The Problem</a>
+    <a href="#how">How It Works</a>
+    <a href="#benefits">For Venue Owners</a>
+    <a href="#contact" class="nav-cta">Partner with Us</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-blob"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span>Smart Vending for Fitness Venues · Chennai</div>
+    <h1 class="hero-headline">
+      Every rep. Every rally.<br/>Every match deserves
+      <span class="accent">the right fuel.</span>
+    </h1>
+    <p class="hero-sub">
+      Proxvend places <strong>smart vending machines</strong> inside gyms, turfs, and sports venues — stocked with protein, hydration, and sports nutrition. Zero cost to you, zero hassle to run.
+    </p>
+    <div class="venue-pills">
+      <span class="pill"><span class="pill-icon">🏋️</span> Gyms</span>
+      <span class="pill"><span class="pill-icon">🏸</span> Badminton Courts</span>
+      <span class="pill"><span class="pill-icon">🏏</span> Cricket Turfs</span>
+      <span class="pill"><span class="pill-icon">🥒</span> Pickleball Courts</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Partner with Us <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#how" class="btn-ghost">See How It Works</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="station-card">
+      <div class="float-badge badge-1"><span class="live-dot"></span>Machine Online · Live</div>
+      <div class="station-icon">⚡</div>
+      <h3>PROXVEND Station</h3>
+      <p>Smart vending for gyms and sports venues. Protein, hydration, and snacks — available when your players need it most.</p>
+      <div class="station-tags">
+        <span class="s-tag o">Zero Cost Setup</span>
+        <span class="s-tag">We Restock</span>
+        <span class="s-tag">24 / 7</span>
+        <span class="s-tag">Gyms & Turfs</span>
+      </div>
+      <div class="station-venues">
+        <div class="venue-stat"><span>2</span><small>Venue types</small></div>
+        <div class="venue-stat"><span>15+</span><small>Products</small></div>
+        <div class="venue-stat"><span>₹0</span><small>Your cost</small></div>
+      </div>
+      <div class="float-badge badge-2">⚡ Revenue share for you</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-cell reveal"><span class="stat-num">₹0</span><span class="stat-desc">Investment required from venue owners</span></div>
+    <div class="stat-cell reveal d1"><span class="stat-num">24/7</span><span class="stat-desc">Availability for players and gym-goers</span></div>
+    <div class="stat-cell reveal d2"><span class="stat-num">15+</span><span class="stat-desc">Curated sports nutrition products</span></div>
+    <div class="stat-cell reveal d3"><span class="stat-num">2×</span><span class="stat-desc">Member satisfaction & retention uplift</span></div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section id="venues">
+  <div class="venues-header reveal">
+    <div class="sec-label">Who We Serve</div>
+    <h2 class="sec-title">Built for everywhere fitness happens.</h2>
+    <p class="sec-sub">Whether your members lift iron or smash shuttlecocks, Proxvend fits right in — serving every kind of player at every level.</p>
+  </div>
+  <div class="venues-grid">
+    <div class="venue-card reveal">
+      <div class="venue-card-top">
+        <div class="venue-emoji-wrap vc-gym">🏋️</div>
+        <h3>Gyms & Fitness Centres</h3>
+        <p>From hardcore lifting gyms to functional fitness studios — members need protein and recovery nutrition right after training, not a 20-minute drive away.</p>
+      </div>
+      <div class="venue-card-profiles">
+        <div class="profiles-label">Who's there</div>
+        <div class="profiles-list">
+          <span class="profile-chip">Bodybuilders</span>
+          <span class="profile-chip">Working Professionals</span>
+          <span class="profile-chip">Weight Loss Seekers</span>
+          <span class="profile-chip">Fitness Newbies</span>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card reveal d1">
+      <div class="venue-card-top">
+        <div class="venue-emoji-wrap vc-turf">🏸</div>
+        <h3>Turfs & Sports Courts</h3>
+        <p>Badminton, cricket, pickleball — multi-hour sessions burn serious energy. Parents, weekend warriors, and junior players all need accessible hydration and snacks on-site.</p>
+      </div>
+      <div class="venue-card-profiles">
+        <div class="profiles-label">Who's there</div>
+        <div class="profiles-list">
+          <span class="profile-chip">Badminton Players</span>
+          <span class="profile-chip">Cricket Teams</span>
+          <span class="profile-chip">Pickleball Players</span>
+          <span class="profile-chip">Children Training</span>
+          <span class="profile-chip">Weekend Warriors</span>
+        </div>
+      </div>
+    </div>
+    <div class="venue-card reveal d2">
+      <div class="venue-card-top">
+        <div class="venue-emoji-wrap vc-multi">🏟️</div>
+        <h3>Multi-Sport Complexes</h3>
+        <p>Venues hosting multiple sports see heavy mixed-age footfall across the day. One Proxvend station serves every kind of player — from school kids to corporate leagues.</p>
+      </div>
+      <div class="venue-card-profiles">
+        <div class="profiles-label">Who's there</div>
+        <div class="profiles-list">
+          <span class="profile-chip">Corporate Teams</span>
+          <span class="profile-chip">School Athletes</span>
+          <span class="profile-chip">Casual Players</span>
+          <span class="profile-chip">Coaches & Trainers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="problem-layout">
+    <div class="reveal">
+      <div class="sec-label">The Gap We Fill</div>
+      <h2 class="sec-title">The session ends.<br/>The fuel doesn't show up.</h2>
+      <p class="sec-sub">Whether it's a gymrat finishing legs or a teenager playing two hours of badminton, the story is the same — the right nutrition isn't there when they need it most.</p>
+    </div>
+    <div class="problem-stack">
+      <div class="problem-card reveal d1">
+        <div class="prob-icon pi-r">🚫</div>
+        <div><h4>No recovery nutrition on-site</h4><p>Post-workout protein windows are real. Walking to a store kills the benefit. Players and gym-goers leave under-fuelled — every single day.</p></div>
+      </div>
+      <div class="problem-card reveal d2">
+        <div class="prob-icon pi-a">💧</div>
+        <div><h4>Hydration is an afterthought at sports venues</h4><p>After two hours of badminton or a cricket net session, electrolytes matter. Most turfs offer nothing beyond a water cooler, if that.</p></div>
+      </div>
+      <div class="problem-card reveal d3">
+        <div class="prob-icon pi-b">👨‍👧</div>
+        <div><h4>Parents can't find healthy snacks for training kids</h4><p>Children training in sports academies need proper fuel. Vending machines filled with chips and sugary drinks don't cut it.</p></div>
+      </div>
+      <div class="problem-card reveal d3">
+        <div class="prob-icon pi-g">📉</div>
+        <div><h4>Venues lose revenue they never knew existed</h4><p>Every hungry or thirsty player that walks out is an untapped revenue moment — one that requires zero extra staff to capture.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-header reveal">
+    <div class="sec-label">How It Works</div>
+    <h2 class="sec-title">Simple to start.<br/>Effortless to run.</h2>
+    <p class="sec-sub">We take on everything — from machine to maintenance. Your role is just to say yes.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step reveal">
+      <span class="step-num">01</span>
+      <div class="step-icon">🤝</div>
+      <h3>We Partner</h3>
+      <p>One conversation about your venue — size, footfall, sport mix. We assess the fit and move fast. Most venues are live within a week.</p>
+      <div class="step-arr">→</div>
+    </div>
+    <div class="step reveal d1">
+      <span class="step-num">02</span>
+      <div class="step-icon">🔧</div>
+      <h3>We Install</h3>
+      <p>Our team handles delivery, positioning, and setup. Zero disruption. We customise the product mix for your specific player profile.</p>
+      <div class="step-arr">→</div>
+    </div>
+    <div class="step reveal d2">
+      <span class="step-num">03</span>
+      <div class="step-icon">🔄</div>
+      <h3>We Keep It Running</h3>
+      <p>Restocking, maintenance, product rotation — all on us. You receive a passive revenue share. No overhead, no headaches.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <div class="benefits-header reveal">
+    <div class="sec-label">For Venue Owners</div>
+    <h2 class="sec-title">Everything you gain.<br/>Nothing you risk.</h2>
+    <p class="sec-sub">Gyms, turf owners, and sports complex managers all benefit the same way — real value with zero investment.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card feat reveal"><span class="benefit-num">01</span><h3>Zero Investment Required</h3><p>Machine, stock, logistics, and setup — fully funded by us. You provide the space. We bring everything else.</p></div>
+    <div class="benefit-card reveal d1"><span class="benefit-num">02</span><h3>Passive Revenue Share</h3><p>Earn a cut of every transaction at your venue — automatically, with no involvement from your staff or management.</p></div>
+    <div class="benefit-card reveal d2"><span class="benefit-num">03</span><h3>Better Player Experience</h3><p>Players stay longer, feel cared for, and come back. The right snack after a rally or a session is a loyalty driver.</p></div>
+    <div class="benefit-card reveal d1"><span class="benefit-num">04</span><h3>Zero Staff Required</h3><p>No counter, no cashier, no stock management. The machine runs itself. Your team focuses on the game, not the vending.</p></div>
+    <div class="benefit-card reveal d2"><span class="benefit-num">05</span><h3>Curated for Your Players</h3><p>Gyms get protein and creatine. Turfs get electrolytes and energy bars. We stock what your players actually need.</p></div>
+    <div class="benefit-card reveal d3"><span class="benefit-num">06</span><h3>Flexible & Scalable</h3><p>Start with one machine. Add more as your venue grows or as you open new locations. We scale with you.</p></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-layout">
+    <div class="reveal">
+      <div class="sec-label">What's Inside</div>
+      <h2 class="sec-title">Stocked for every kind of player.</h2>
+      <p class="sec-sub">Protein for gym members. Electrolytes for court players. Healthy snacks for training kids. Every machine curated for its venue.</p>
+      <a href="#contact" class="btn-primary" style="margin-top:28px;display:inline-flex;">Become a Partner <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="products-grid">
+      <div class="product-card reveal"><span class="prod-emoji">🥛</span><span class="prod-venue">Gym</span><h4>Whey Protein Sachets</h4><p>Single-serve protein from trusted brands. Right after the session, right there on the floor.</p></div>
+      <div class="product-card reveal d1"><span class="prod-emoji">💧</span><span class="prod-venue g">Gym + Turf</span><h4>Electrolyte Drinks</h4><p>Rapid hydration sachets for post-rally and post-session recovery. Essential in Chennai heat.</p></div>
+      <div class="product-card reveal d2"><span class="prod-emoji">🍫</span><span class="prod-venue g">Gym + Turf</span><h4>Protein & Energy Bars</h4><p>High-protein, low-sugar bars for on-the-go fuel. Ideal between matches or mid-gym session.</p></div>
+      <div class="product-card reveal d3"><span class="prod-emoji">⚡</span><span class="prod-venue">Gym</span><h4>Creatine & Pre-Workout</h4><p>Single-serve creatine monohydrate and pre-workout for members who train with intent.</p></div>
+      <div class="product-card reveal d1"><span class="prod-emoji">🥜</span><span class="prod-venue g">Turf</span><h4>Healthy Snack Packs</h4><p>Nuts, seeds, and clean snack packs for parents, kids in training, and casual players.</p></div>
+      <div class="product-card reveal d2"><span class="prod-emoji">🫐</span><span class="prod-venue g">Gym + Turf</span><h4>Sports & Energy Drinks</h4><p>Isotonic and functional drinks for sustained energy during long match sessions.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="reveal" style="max-width:580px;">
+    <div class="sec-label">Why Proxvend</div>
+    <h2 class="sec-title">Purpose-built for fitness venues.<br/>Not generic vending.</h2>
+    <p class="sec-sub">There's a big difference between a vending machine full of chips and a Proxvend station. Here's what sets us apart.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-item reveal"><div class="why-check">✓</div><h4>Sports-Only Focus</h4><p>We don't serve offices or hospitals. We serve gyms and turfs — so our product curation is always sport-relevant.</p></div>
+    <div class="why-item reveal d1"><div class="why-check">✓</div><h4>Age-Appropriate Range</h4><p>Products for adults, working professionals, and children in training. Every venue's mix is thoughtfully put together.</p></div>
+    <div class="why-item reveal d2"><div class="why-check">✓</div><h4>Local & Hands-On</h4><p>We're Chennai-based and operate in person. Fast restocking, real accountability, no third-party middlemen.</p></div>
+    <div class="why-item reveal d3"><div class="why-check">✓</div><h4>Founder-Led Partnership</h4><p>You deal with the founders, not a sales rep. Every partnership is personal and concerns get answered fast.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testimonials-header reveal">
+    <div class="sec-label">Early Partners Say</div>
+    <h2 class="sec-title">What venue owners are telling us.</h2>
+    <p class="sec-sub">From gym floors to turf sidelines — here's what our early venue partners have experienced.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <span class="testi-quote">"</span>
+      <p class="testi-text">Our gym members started asking about the machine within the first week. Protein sachets were the first to go. It just made complete sense on the floor.</p>
+      <div class="testi-author">
+        <div class="testi-avatar av-gym">KM</div>
+        <div><span class="testi-name">Gym Owner, Chennai</span><span class="testi-venue-tag vt-gym">Gym Partner</span></div>
+      </div>
+    </div>
+    <div class="testi-card reveal d1">
+      <span class="testi-quote">"</span>
+      <p class="testi-text">The electrolyte sachets are flying off the machine after every badminton session. Parents are happy. Players are happy. We didn't have to do a thing.</p>
+      <div class="testi-author">
+        <div class="testi-avatar av-turf">RS</div>
+        <div><span class="testi-name">Turf Owner, Chennai</span><span class="testi-venue-tag vt-turf">Turf Partner</span></div>
+      </div>
+    </div>
+    <div class="testi-card reveal d2">
+      <span class="testi-quote">"</span>
+      <p class="testi-text">We run a multi-sport complex. The mix of snacks and drinks covers our cricket players, our gym crowd, and even the kids training on weekends. Smart product selection.</p>
+      <div class="testi-author">
+        <div class="testi-avatar av-multi">PR</div>
+        <div><span class="testi-name">Complex Manager, Chennai</span><span class="testi-venue-tag vt-multi">Multi-Sport Partner</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact">
+  <div class="cta-inner reveal">
+    <div class="cta-eyebrow">
+      <span class="partner-with">Partner with</span>
+      <span class="brand-name">PRO <span class="x-mark">×</span> VEND</span>
+    </div>
+    <h2 class="cta-title">Right here. Right now. Right fuel.</h2>
+    <p class="cta-sub">Whether you run a gym, a badminton court, a cricket turf, or a multi-sport complex — let's talk. No commitment, no cost, no catch.</p>
+    <div class="cta-venue-pills">
+      <span class="cta-pill">🏋️ Gyms</span>
+      <span class="cta-pill">🏸 Badminton Courts</span>
+      <span class="cta-pill">🏏 Cricket Turfs</span>
+      <span class="cta-pill">🥒 Pickleball Courts</span>
+      <span class="cta-pill">🏟️ Multi-Sport Complexes</span>
+    </div>
+    <div class="cta-buttons">
+      <a href="https://wa.me/919791289389" target="_blank" class="cta-btn-primary">💬 WhatsApp Us</a>
+      <button onclick="openModal()" class="cta-btn-outline" style="cursor:pointer;font-family:var(--body);">📋 Enquiry</button>
+    </div>
+  </div>
+</section>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal-overlay" id="enquiryModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-header-text">
+        <h3 id="modal-title">Partner <span>Enquiry</span></h3>
+        <p>Fill in your details and we'll get back to you within 24 hours.</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Form -->
+    <div class="modal-body" id="modalForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name <span class="req">*</span></label>
+          <input type="text" id="f-name" placeholder="Your full name"/>
+          <span class="error-msg" id="err-name">Please enter your name.</span>
+        </div>
+        <div class="form-group">
+          <label>Phone <span class="req">*</span></label>
+          <input type="tel" id="f-phone" placeholder="+91 XXXXX XXXXX"/>
+          <span class="error-msg" id="err-phone">Please enter a valid phone number.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="you@example.com"/>
+        <span class="error-msg" id="err-email">Please enter a valid email address.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Location / City <span class="req">*</span></label>
+        <input type="text" id="f-location" placeholder="e.g. Chennai, Adyar"/>
+        <span class="error-msg" id="err-location">Please enter your location.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Venue Type <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="f-type" onchange="handleTypeChange()">
+            <option value="" disabled selected>Select venue type</option>
+            <option value="Gym">🏋️ Gym</option>
+            <option value="Turf">🏸 Turf / Sports Court</option>
+            <option value="Other">🏟️ Other</option>
+          </select>
+        </div>
+        <span class="error-msg" id="err-type">Please select a venue type.</span>
+      </div>
+
+      <div class="form-group" id="venue-row">
+        <label>Specify Your Venue <span class="req">*</span></label>
+        <input type="text" id="f-venue" placeholder="e.g. Multi-sport complex, Cricket academy…"/>
+        <span class="error-msg" id="err-venue">Please specify your venue.</span>
+      </div>
+
+      <button class="form-submit" onclick="submitForm()">
+        Send Enquiry
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="form-note">Your enquiry will be sent to the Proxvend team. We'll respond within 24 hours.</p>
+    </div>
+
+    <!-- Success state -->
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">✅</div>
+      <h3>Enquiry Sent!</h3>
+      <p>Thanks for reaching out. The Proxvend team will get back to you within 24 hours.</p>
+      <button class="close-success" onclick="closeModal()">Close</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">PRO<span>×</span>VEND</div>
+      <p>Smart vending machines for gyms and sports venues in Chennai. Zero cost, maximum impact.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <a href="#venues">Who We Serve</a>
+      <a href="#problem">The Problem</a>
+      <a href="#how">How It Works</a>
+      <a href="#benefits">For Venue Owners</a>
+      <a href="#products">Products</a>
+    </div>
+    <div class="footer-col">
+      <h4>Venues</h4>
+      <a href="#venues">Gyms</a>
+      <a href="#venues">Badminton Courts</a>
+      <a href="#venues">Cricket Turfs</a>
+      <a href="#venues">Pickleball Courts</a>
+      <a href="#venues">Multi-Sport Complexes</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="https://wa.me/919791289389">WhatsApp</a>
+      <a href="mailto:arthyvenkat@proxvend.com,madhuniga.selvarsa@proxvend.com">hello@proxvend.com</a>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Proxvend. Chennai, India.</span>
+    <span class="footer-tagline">RIGHT HERE. RIGHT NOW. RIGHT FUEL.</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 20); });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── MODAL ── */
+  function openModal() {
+    document.getElementById('enquiryModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('enquiryModal').classList.remove('open');
+    document.body.style.overflow = '';
+    // reset form
+    ['f-name','f-phone','f-email','f-location','f-type','f-venue'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = el.tagName === 'SELECT' ? '' : ''; el.classList.remove('error'); }
+    });
+    document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+    document.getElementById('venue-row').classList.remove('show');
+    document.getElementById('modalForm').style.display = '';
+    document.getElementById('modalSuccess').style.display = 'none';
+  }
+
+  // Close on overlay click
+  document.getElementById('enquiryModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function handleTypeChange() {
+    const type = document.getElementById('f-type').value;
+    const venueRow = document.getElementById('venue-row');
+    if (type === 'Other') { venueRow.classList.add('show'); }
+    else { venueRow.classList.remove('show'); document.getElementById('f-venue').value = ''; }
+  }
+
+  function validate() {
+    let valid = true;
+    const rules = [
+      { id: 'f-name',     err: 'err-name',     test: v => v.trim().length >= 2 },
+      { id: 'f-phone',    err: 'err-phone',     test: v => /^[+\d\s\-()]{7,15}$/.test(v.trim()) },
+      { id: 'f-email',    err: 'err-email',     test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+      { id: 'f-location', err: 'err-location',  test: v => v.trim().length >= 2 },
+      { id: 'f-type',     err: 'err-type',      test: v => v !== '' },
+    ];
+    rules.forEach(({ id, err, test }) => {
+      const el = document.getElementById(id);
+      const errEl = document.getElementById(err);
+      const ok = test(el.value);
+      el.classList.toggle('error', !ok);
+      errEl.classList.toggle('show', !ok);
+      if (!ok) valid = false;
+    });
+    // conditional venue field
+    if (document.getElementById('f-type').value === 'Other') {
+      const v = document.getElementById('f-venue').value.trim();
+      const ok = v.length >= 2;
+      document.getElementById('f-venue').classList.toggle('error', !ok);
+      document.getElementById('err-venue').classList.toggle('show', !ok);
+      if (!ok) valid = false;
+    }
+    return valid;
+  }
+
+  function submitForm() {
+    if (!validate()) return;
+    const name     = document.getElementById('f-name').value.trim();
+    const phone    = document.getElementById('f-phone').value.trim();
+    const email    = document.getElementById('f-email').value.trim();
+    const location = document.getElementById('f-location').value.trim();
+    const type     = document.getElementById('f-type').value;
+    const venue    = type === 'Other' ? document.getElementById('f-venue').value.trim() : type;
+
+    const to      = 'arthyvenkat@proxvend.com,madhuniga.selvarsa@proxvend.com';
+    const subject = encodeURIComponent(`Proxvend Partner Enquiry — ${name}`);
+    const body    = encodeURIComponent(
+`New Partner Enquiry from Proxvend Website
+
+──────────────────────────────
+Name       : ${name}
+Phone      : ${phone}
+Email      : ${email}
+Location   : ${location}
+Venue Type : ${venue}
+──────────────────────────────
+
+This enquiry was submitted via the Proxvend website contact form.`
+    );
+
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+    // Show success after short delay
+    setTimeout(() => {
+      document.getElementById('modalForm').style.display = 'none';
+      document.getElementById('modalSuccess').style.display = 'block';
+    }, 600);
+  }
+</script>
+</body>
+</html>

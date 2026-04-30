@@ -520,6 +520,10 @@
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .footer-top { grid-template-columns: 1fr 1fr; }
     .nav-links { display: none; }
+    #the-deal [style*="grid-template-columns: 1fr 1px 1fr"] { grid-template-columns: 1fr !important; }
+    #the-deal [style*="min-height:260px"] { display: none !important; }
+    #the-deal [style*="grid-template-columns: 1fr 1px 1fr"] > div:last-child { border-top: 1px solid rgba(0,0,0,.15); padding-top: 24px; }
+    #the-deal [style*="padding: 56px 56px"] { padding: 36px 28px !important; }
   }
 </style>
 </head>
@@ -531,6 +535,7 @@
   <div class="nav-links">
     <a href="#venues">Who We Serve</a>
     <a href="#problem">The Problem</a>
+    <a href="#the-deal">The Deal</a>
     <a href="#how">How It Works</a>
     <a href="#benefits">For Venue Owners</a>
     <a href="#contact" class="nav-cta">Partner with Us</a>
@@ -721,7 +726,7 @@
   </div>
   <div class="benefits-grid">
     <div class="benefit-card feat reveal"><span class="benefit-num">01</span><h3>Zero Investment Required</h3><p>Machine, stock, logistics, and setup — fully funded by Proxvend. Savvy venue owners bring the space. We engineer everything else.</p></div>
-    <div class="benefit-card reveal d1"><span class="benefit-num">02</span><h3>Passive Revenue Share</h3><p>Earn a cut of every transaction — automatically, with zero involvement from the team. Champions earn while they sleep.</p></div>
+    
     <div class="benefit-card reveal d2"><span class="benefit-num">03</span><h3>Better Player Experience</h3><p>Players stay longer, feel cared for, and come back. The right snack after a rally or a session is a loyalty driver.</p></div>
     <div class="benefit-card reveal d1"><span class="benefit-num">04</span><h3>Zero Staff Required</h3><p>No counter, no cashier, no stock management. The machine runs itself. Elite teams stay focused on the game — not the vending.</p></div>
     <div class="benefit-card reveal d2"><span class="benefit-num">05</span><h3>Curated for Champions</h3><p>Gyms get protein and creatine. Turfs get electrolytes and energy bars. Serious players get exactly what they need — nothing less.</p></div>
@@ -794,6 +799,116 @@
       <div class="testi-author">
         <div class="testi-avatar av-multi">PR</div>
         <div><span class="testi-name">Complex Manager, Chennai</span><span class="testi-venue-tag vt-multi">Multi-Sport Partner</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIXED RENT -->
+<section id="the-deal" style="background: var(--black); padding: 96px 5vw;">
+  <div class="reveal" style="text-align:center; margin-bottom: 56px;">
+    <div class="sec-label" style="color:var(--orange);">The Deal</div>
+    <h2 style="font-family:var(--display); font-size:clamp(2.2rem,4.5vw,3.4rem); font-weight:900; color:var(--white); letter-spacing:-.01em; line-height:1.05;">
+      Dead space shouldn't sit idle.<br/><span style="color:var(--orange);">It should pay you every month.</span>
+    </h2>
+    <p style="font-size:1rem; color:rgba(255,255,255,.5); max-width:520px; margin:16px auto 0; line-height:1.7;">
+      No chasing revenue share numbers. No paperwork. No conditions. Just a fixed amount credited to the venue — every single month.
+    </p>
+  </div>
+
+  <!-- Main deal card -->
+  <div class="reveal" style="max-width:900px; margin:0 auto;">
+    <div style="
+      background: var(--orange);
+      border-radius: 24px;
+      padding: 56px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    ">
+      <!-- background grid texture -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;"></div>
+
+      <!-- Left: headline -->
+      <div style="position:relative;z-index:1;">
+        <div style="font-family:var(--display);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.5);margin-bottom:16px;">Fixed Monthly Rent</div>
+        <div style="font-family:var(--display);font-size:clamp(3rem,6vw,5rem);font-weight:900;color:var(--black);line-height:.95;margin-bottom:20px;">FIXED<br/>RENT.<br/>ZERO<br/>HASSLE.</div>
+        <div style="font-size:1.05rem;font-weight:600;color:rgba(0,0,0,.75);line-height:1.6;margin-bottom:6px;">A guaranteed fixed rent — credited monthly.</div>
+        <div style="font-size:.875rem;color:rgba(0,0,0,.55);line-height:1.6;">No revenue share. No paperwork.<br/>No conditions. No surprises.</div>
+      </div>
+
+      <!-- Divider -->
+      <div style="width:1px;background:rgba(0,0,0,.15);height:100%;min-height:260px;position:relative;z-index:1;"></div>
+
+      <!-- Right: bullets -->
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:18px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:var(--black);margin-top:1px;">✓</div>
+          <div>
+            <div style="font-size:.93rem;font-weight:700;color:var(--black);margin-bottom:2px;">Guaranteed monthly income</div>
+            <div style="font-size:.82rem;color:rgba(0,0,0,.6);line-height:1.5;">A fixed amount — not a variable cut that depends on sales.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:var(--black);margin-top:1px;">✓</div>
+          <div>
+            <div style="font-size:.93rem;font-weight:700;color:var(--black);margin-bottom:2px;">Zero staff required on your end</div>
+            <div style="font-size:.82rem;color:rgba(0,0,0,.6);line-height:1.5;">The machine is fully self-serve. No one from the venue needs to touch it.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:var(--black);margin-top:1px;">✓</div>
+          <div>
+            <div style="font-size:.93rem;font-weight:700;color:var(--black);margin-bottom:2px;">We restock, maintain & service it entirely</div>
+            <div style="font-size:.82rem;color:rgba(0,0,0,.6);line-height:1.5;">Proxvend handles every operational detail — end to end.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:var(--black);margin-top:1px;">✓</div>
+          <div>
+            <div style="font-size:.93rem;font-weight:700;color:var(--black);margin-bottom:2px;">3-month pilot — walk away if it's not working</div>
+            <div style="font-size:.82rem;color:rgba(0,0,0,.6);line-height:1.5;">No lock-in. No penalty. If it doesn't add value, we part ways, no questions asked.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom strip -->
+    <div style="
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      margin-top: 16px;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    ">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.5rem;">🏚️</span>
+        <div>
+          <div style="font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--white);letter-spacing:.01em;">Got dead floor space?</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.45);">That corner, that wall, that unused lobby spot — it's untapped income.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.5rem;">📦</span>
+        <div>
+          <div style="font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--white);letter-spacing:.01em;">We bring the machine</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.45);">Stocked, installed, and running — before the month is out.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.5rem;">💰</span>
+        <div>
+          <div style="font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--orange);letter-spacing:.01em;">Fixed rent. Lands every month.</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.45);">Guaranteed. No conditions. No surprises.</div>
+        </div>
       </div>
     </div>
   </div>
